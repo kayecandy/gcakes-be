@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch, { BodyInit } from 'node-fetch';
 
 export const ContentfulConfig = {
   space: process.env.CONTENTFUL_SPACE ?? "",
@@ -6,7 +6,7 @@ export const ContentfulConfig = {
   graphQlUrl: `${process.env.CONTENTFUL_GRAPHQL_URL}/spaces/${process.env.CONTENTFUL_SPACE}`,
 };
 
-export const fetchGQL = (body) => {
+export const fetchGQL = (body?: BodyInit) => {
   return fetch(ContentfulConfig.graphQlUrl, {
     method: "POST",
     headers: {
