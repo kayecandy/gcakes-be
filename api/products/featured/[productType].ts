@@ -27,7 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
       `,
       variables: {
-        productType: "cakes",
+        productType: req.query.productType,
       },
     })
   );
