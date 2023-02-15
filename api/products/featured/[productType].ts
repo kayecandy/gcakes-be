@@ -1,26 +1,41 @@
-import {
-  VercelRequest,
-  VercelResponse,
-} from '@vercel/node';
+import { StatusCodes } from "http-status-codes";
 
-import { fetchGQL } from '../../../src/contentful';
+import { VercelRequest, VercelResponse } from "@vercel/node";
+
+import { fetchGQL } from "../../../src/contentful";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const t = await fetchGQL(
     JSON.stringify({
-      query: `{
-    productCollection{
-      items{
-        name
-      }
-    }
-  }`,
+      query: `
+        query ($productType: String) {
+          productCollection(where: { featured: true, productType: $productType }) {
+            items {
+              sys {
+                id
+              }
+              name
+              price
+              description
+              image {
+                url
+              }
+              featured
+              productType
+            }
+          }
+        }
+      `,
+      variables: {
+        productType: "cakes",
+      },
     })
   );
 
   const response = await t.json();
 
-  console.log(req.query.productType);
-
-  return res.json(response);
+  return res
+    .setHeader("Access-Control-Allow-Origin", "*")
+    .status(StatusCodes.OK)
+    .json(response.data.productCollection.items);
 }
