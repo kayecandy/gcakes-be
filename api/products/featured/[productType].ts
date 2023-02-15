@@ -37,5 +37,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   return res
     .setHeader("Access-Control-Allow-Origin", "*")
     .status(StatusCodes.OK)
-    .json(response);
+    .json(response.data.productCollection.items);
 }
