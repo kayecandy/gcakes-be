@@ -12,6 +12,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .end("Not allowed");
   }
 
+  console.log("This is body", req.body);
+
   const product = await (
     await fetchCM("entries", {
       method: "POST",
