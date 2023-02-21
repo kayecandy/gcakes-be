@@ -2,6 +2,7 @@ import { JWTPayload, jwtVerify, SignJWT } from "jose";
 
 export const TokenConfig = {
   secret: process.env.TOKEN_SECRET ?? "",
+  token_expiration: "1d",
 };
 
 export const generateToken = (user: JWTPayload) => {
@@ -9,6 +10,8 @@ export const generateToken = (user: JWTPayload) => {
     .setProtectedHeader({
       alg: "HS256",
     })
+    .setIssuedAt()
+    .setExpirationTime(TokenConfig.token_expiration)
     .sign(new TextEncoder().encode(TokenConfig.secret));
 };
 

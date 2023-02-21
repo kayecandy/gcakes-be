@@ -19,9 +19,13 @@ export default async function middleware(req: Request) {
     req.headers.get("authorization")?.split(" ")[1];
 
   if (token) {
-    await decodeToken(token);
+    try {
+      await decodeToken(token);
 
-    return next();
+      return next();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return rewrite("/api/errors/unauthorized");

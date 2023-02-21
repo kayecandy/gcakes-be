@@ -36,6 +36,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const user = (await t.json()).data.userCollection.items[0];
 
+  console.log(user);
+
   const passwordCorrect = passwordCompare(req.body.password, user.password);
 
   if (passwordCorrect) {
