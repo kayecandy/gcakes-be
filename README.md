@@ -20,5 +20,5 @@ start "https://drive.google.com/u/2/uc?id=1agXtg0K-1PXcH26_tB8Na-Yue0fk1u85&expo
 # Run instructions
 
 ```bash
-vercel dev
+npx vercel dev
 ```
