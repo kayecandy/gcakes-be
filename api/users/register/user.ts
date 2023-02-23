@@ -3,6 +3,7 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import { StatusCodes } from "http-status-codes";
 
 import { fetchCM } from "../../../src/contentful";
+import { passwordHash } from "../../../src/password";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method !== "POST") {
@@ -11,8 +12,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .setHeader("Allow", "POST")
         .end("Not allowed");
     }
-
-    console.log(req.body);
 
     const user = await (
         await fetchCM("entries", {
@@ -26,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         "en-US": req.body.userid,
                     },
                     password: {
-                        "en-US": req.body.password,
+                        "en-US": passwordHash(req.body.password),
                     },
                     admin: {
                         "en-US": req.body.admin,
@@ -44,6 +43,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             },
         });
     }
+
+    console.log("Register request ", req.body);
 
     return res.status(StatusCodes.OK).json(user);
 }
