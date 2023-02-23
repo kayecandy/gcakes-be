@@ -27,6 +27,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     password: {
                         "en-US": passwordHash(req.body.password),
                     },
+                    firstName: {
+                        "en-US": req.body.firstName,
+                    },
+                    lastName: {
+                        "en-US": req.body.lastName,
+                    },
+                    email: {
+                        "en-US": req.body.email,
+                    },
+                    address: {
+                        "en-US": req.body.address,
+                    },
                     admin: {
                         "en-US": req.body.admin,
                     },
