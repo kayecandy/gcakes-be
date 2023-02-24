@@ -18,3 +18,7 @@ export const generateToken = (user: JWTPayload) => {
 export const decodeToken = (token: string) => {
   return jwtVerify(token, new TextEncoder().encode(TokenConfig.secret));
 };
+
+export const verifyTokenUserId = (token: JWTPayload, userId: string) => {
+  return token.userid === userId;
+};

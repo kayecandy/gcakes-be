@@ -3,9 +3,9 @@ import { StatusCodes } from "http-status-codes";
 import { VercelRequest, VercelResponse } from "@vercel/node";
 
 import { fetchGQL } from "../../src/contentful";
+import { unauthorisedHandler } from "../../src/errors/unauthorized";
 import { passwordCompare } from "../../src/password";
 import { generateToken } from "../../src/tokens";
-import unauthorisedHandler from "../errors/unauthorized";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
