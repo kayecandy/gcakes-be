@@ -35,9 +35,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const user = (await t.json()).data.userCollection.items[0];
 
-  return res
-    .setHeader("Access-Control-Allow-Origin", "*")
-    .status(StatusCodes.OK)
-    .json({ user });
-  // .json(response.data.productCollection.items);
+  return res.status(StatusCodes.OK).json(user);
 }

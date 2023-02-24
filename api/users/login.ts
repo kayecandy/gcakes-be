@@ -46,7 +46,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const accessToken = await generateToken(user);
 
     return res
-      .setHeader("Access-Control-Allow-Origin", "*")
       .setHeader("Set-Cookie", [`accessToken=${accessToken}`])
       .status(StatusCodes.OK)
       .end("Login successful!");

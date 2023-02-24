@@ -1,11 +1,13 @@
+import { StatusCodes } from 'http-status-codes';
+
 import {
-    VercelRequest,
-    VercelResponse,
-  } from '@vercel/node';
-  
-  import { fetchGQL } from '../../src/contentful';
-  
-  export default async function handler(req: VercelRequest, res: VercelResponse) {
+  VercelRequest,
+  VercelResponse,
+} from '@vercel/node';
+
+import { fetchGQL } from '../../src/contentful';
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
         const t = await (
           await fetchGQL(
             JSON.stringify({
@@ -34,6 +36,6 @@ import {
           )
         ).json()
     
-        return res.status(200).json(t.data.productCollection.items);
+        return res.status(StatusCodes.OK).json(t.data.productCollection.items);
   }
   
