@@ -36,19 +36,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const user = (await t.json()).data.userCollection.items[0];
 
-  console.log(user);
+  console.log("User", user);
 
-  const passwordCorrect = passwordCompare(req.body.password, user.password);
+  if (user) {
+    const passwordCorrect = passwordCompare(req.body.password, user.password);
 
-  if (passwordCorrect) {
-    user.password = undefined;
+    if (passwordCorrect) {
+      user.password = undefined;
 
-    const accessToken = await generateToken(user);
+      const accessToken = await generateToken(user);
 
-    return res
-      .setHeader("Set-Cookie", [`accessToken=${accessToken}`])
-      .status(StatusCodes.OK)
-      .end("Login successful!");
+      return res
+        .setHeader("Set-Cookie", [`accessToken=${accessToken}`])
+        .status(StatusCodes.OK)
+        .end("Login successful!");
+    }
   }
 
   return unauthorisedHandler(req, res);
