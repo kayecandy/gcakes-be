@@ -39,6 +39,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     address: {
                         "en-US": req.body.address,
                     },
+                    birthday: {
+                        "en-US": req.body.birthday,
+                    },
                     admin: {
                         "en-US": req.body.admin,
                     },
