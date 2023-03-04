@@ -1,15 +1,22 @@
-import { StatusCodes } from "http-status-codes";
+import { StatusCodes } from 'http-status-codes';
 
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import {
+  VercelRequest,
+  VercelResponse,
+} from '@vercel/node';
 
-import { fetchGQL } from "../../src/contentful";
-import { unauthorisedHandler } from "../../src/errors/unauthorized";
-import { passwordCompare } from "../../src/password";
-import { generateToken } from "../../src/tokens";
+import { fetchGQL } from '../../src/contentful';
+import { unauthorisedHandler } from '../../src/errors/unauthorized';
+import { passwordCompare } from '../../src/password';
+import { generateToken } from '../../src/tokens';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== "POST") {
+  if (req.method !== "POST" && req.method !== "OPTIONS") {
     return res.status(StatusCodes.NOT_FOUND).end("Method not allowed");
+  }
+
+  if(req.method === "OPTIONS"){
+    return res.status(StatusCodes.NO_CONTENT).end();
   }
 
   const t = await fetchGQL(
