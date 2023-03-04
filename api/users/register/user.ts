@@ -6,14 +6,18 @@ import { fetchCM } from "../../../src/contentful";
 import { passwordHash } from "../../../src/password";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-    if (req.method !== "POST") {
-        return res
-        .status(StatusCodes.NOT_FOUND)
-        .setHeader("Allow", "POST")
-        .end("Not allowed");
-    }
+    if (req.method !== "POST" && req.method !== "OPTIONS") {
+    return res
+		.status(StatusCodes.NOT_FOUND)
+		.setHeader("Allow", "POST")
+		.end("Not allowed");
+  }
 
-    const user = await (
+  if (req.method === "OPTIONS") {
+    return res.status(StatusCodes.NO_CONTENT).setHeader("Allow", "POST").end();
+  }
+
+     const user = await (
         await fetchCM("entries", {
             method: "POST",
             headers: {
