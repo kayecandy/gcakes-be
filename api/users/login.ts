@@ -13,7 +13,10 @@ import {
 } from '../../src/handlers';
 import { corsMiddleware } from '../../src/middlewares/cors-middleware';
 import { passwordCompare } from '../../src/password';
-import { generateToken } from '../../src/tokens';
+import {
+  decodeToken,
+  generateToken,
+} from '../../src/tokens';
 
 const loginHandler: MultiHandler = async (req: VercelRequest, res: VercelResponse) => {
   if (req.method !== "POST" && req.method !== "OPTIONS") {
@@ -65,14 +68,15 @@ const loginHandler: MultiHandler = async (req: VercelRequest, res: VercelRespons
       user.password = undefined;
 
       const accessToken = await generateToken(user);
-      
+      const decodedAccessToken = await decodeToken(accessToken);
 
       res
         .setHeader("Set-Cookie", [`accessToken=${accessToken}`])
         .status(StatusCodes.OK)
         .json({
           accessToken,
-          user
+          user,
+          exp: decodedAccessToken.payload.exp
         });
 
       return {
