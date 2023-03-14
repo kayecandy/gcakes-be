@@ -12,7 +12,7 @@ export type MultiHandlerResponse = {
 export type MultiHandler = (
   req: VercelRequest,
   res: VercelResponse,
-  data?: Record<string, unknown>;
+  data?: Record<string, unknown>
 ) => Promise<MultiHandlerResponse>;
 
 export const withMultiHandlers = (handlers: MultiHandler[]) => {
