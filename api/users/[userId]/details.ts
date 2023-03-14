@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import { JWTPayload } from 'jose';
 
 import {
   VercelRequest,
@@ -16,8 +17,17 @@ import { methodMiddleware } from '../../../src/middlewares/method-middleware';
 
 export const userDetailsHandler: MultiHandler = async (
   req: VercelRequest,
-  res: VercelResponse
+  res: VercelResponse,
+  data = {}
 ) => {
+
+  const {decodedToken} = data;
+
+  if(!decodedToken){
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .end();
+  }
 
   const t = await fetchGQL(
     JSON.stringify({
@@ -46,7 +56,10 @@ export const userDetailsHandler: MultiHandler = async (
   const user = (await t.json()).data.userCollection.items[0];
 
   return {
-    response: res.status(StatusCodes.OK).json(user),
+    response: res.status(StatusCodes.OK).json({
+      user,
+      expiration: (decodedToken as JWTPayload).exp
+    }),
     action: "send",
   };
 };

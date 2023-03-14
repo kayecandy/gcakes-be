@@ -1,8 +1,11 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import {
+  VercelRequest,
+  VercelResponse,
+} from '@vercel/node';
 
-import { unauthorisedHandler } from "../errors/unauthorized";
-import { MultiHandler } from "../handlers";
-import { decodeToken } from "../tokens";
+import { unauthorisedHandler } from '../errors/unauthorized';
+import { MultiHandler } from '../handlers';
+import { decodeToken } from '../tokens';
 
 /**
  * Middleware for authenticate user.
@@ -24,6 +27,9 @@ export const authMiddleware: MultiHandler = async (
         return {
           action: "next",
           response: res,
+          data: {
+            decodedToken: decodedToken.payload
+          }
         };
       } else {
         throw new Error("Token `userid` doesn't match with parameter `userId`");
