@@ -7,16 +7,29 @@ import {
 
 import { fetchGQL } from '../../src/contentful';
 import { unauthorisedHandler } from '../../src/errors/unauthorized';
+import {
+  MultiHandler,
+  withMultiHandlers,
+} from '../../src/handlers';
+import { corsMiddleware } from '../../src/middlewares/cors-middleware';
 import { passwordCompare } from '../../src/password';
 import { generateToken } from '../../src/tokens';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+const loginHandler: MultiHandler = async (req: VercelRequest, res: VercelResponse) => {
   if (req.method !== "POST" && req.method !== "OPTIONS") {
-    return res.status(StatusCodes.NOT_FOUND).end("Method not allowed");
+    res.status(StatusCodes.NOT_FOUND).end("Method not allowed");
+    return {
+      action: "send",
+      response: res
+    }
   }
 
   if(req.method === "OPTIONS"){
-    return res.status(StatusCodes.NO_CONTENT).end();
+    res.status(StatusCodes.NO_CONTENT).end();
+    return {
+      action: "send",
+      response: res
+    }
   }
 
   const t = await fetchGQL(
@@ -53,12 +66,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const accessToken = await generateToken(user);
 
-      return res
+      res
         .setHeader("Set-Cookie", [`accessToken=${accessToken}`])
         .status(StatusCodes.OK)
         .json({message:"Login successful!"});
+
+      return {
+        action: "send",
+        response: res
+      }
     }
   }
 
-  return unauthorisedHandler(req, res);
+  unauthorisedHandler(req, res);
+  return {
+    action: "send",
+    response: res
+  }
 }
+
+export default withMultiHandlers([
+  corsMiddleware,
+  loginHandler
+])
