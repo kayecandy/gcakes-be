@@ -56,7 +56,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res
         .setHeader("Set-Cookie", [`accessToken=${accessToken}`])
         .status(StatusCodes.OK)
-        .end("Login successful!");
+        .end({message:"Login successful!"});
     }
   }
 
