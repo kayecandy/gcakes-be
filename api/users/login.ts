@@ -65,11 +65,15 @@ const loginHandler: MultiHandler = async (req: VercelRequest, res: VercelRespons
       user.password = undefined;
 
       const accessToken = await generateToken(user);
+      
 
       res
         .setHeader("Set-Cookie", [`accessToken=${accessToken}`])
         .status(StatusCodes.OK)
-        .json({message:"Login successful!"});
+        .json({
+          message:"Login successful!",
+          accessToken
+        });
 
       return {
         action: "send",
