@@ -1,16 +1,23 @@
-import { StatusCodes } from "http-status-codes";
+import { StatusCodes } from 'http-status-codes';
 
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import {
+  VercelRequest,
+  VercelResponse,
+} from '@vercel/node';
 
-import { fetchGQL } from "../../../src/contentful";
-import { MultiHandler, withMultiHandlers } from "../../../src/handlers";
-import { authMiddleware } from "../../../src/middlewares/auth-middleware";
+import { fetchGQL } from '../../../src/contentful';
+import {
+  MultiHandler,
+  withMultiHandlers,
+} from '../../../src/handlers';
+import { authMiddleware } from '../../../src/middlewares/auth-middleware';
+import { corsMiddleware } from '../../../src/middlewares/cors-middleware';
 
 export const userDetailsHandler: MultiHandler = async (
   req: VercelRequest,
   res: VercelResponse
 ) => {
-  if (req.method !== "POST") {
+  if (req.method !== "GET") {
     return {
       action: "send",
       response: res.status(StatusCodes.NOT_FOUND).end("Method not allowed"),
@@ -49,4 +56,8 @@ export const userDetailsHandler: MultiHandler = async (
   };
 };
 
-export default withMultiHandlers([authMiddleware, userDetailsHandler]);
+export default withMultiHandlers([
+  corsMiddleware,
+  authMiddleware,
+  userDetailsHandler,
+]);
