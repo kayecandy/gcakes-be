@@ -13,7 +13,7 @@ export const methodMiddleware = (allowedMethods: string[])=>{
     response: VercelResponse
   ) => {
     const methods = [...allowedMethods, "OPTIONS"];
-    if (req.method && req.method in methods) {
+    if (req.method && methods.indexOf(req.method) === -1) {
       return response
         .status(StatusCodes.NOT_FOUND)
         .setHeader("Allow", methods.join(","))

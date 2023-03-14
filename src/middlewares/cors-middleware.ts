@@ -11,7 +11,7 @@ export const corsMiddleware: MultiHandler = async (
 ) => {
   response.setHeader(
     "Access-Control-Allow-Origin",
-    req.headers.origin ?? ""
+    req.headers.origin ?? "*"
   )
 
   return {
