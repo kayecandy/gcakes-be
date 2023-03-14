@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "*"
+          "value": "localhost, gcakes-fe*.vercel.app"
         },
         {
           "key": "Access-Control-Allow-Headers",
