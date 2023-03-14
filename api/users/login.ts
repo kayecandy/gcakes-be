@@ -12,6 +12,7 @@ import {
   withMultiHandlers,
 } from '../../src/handlers';
 import { corsMiddleware } from '../../src/middlewares/cors-middleware';
+import { methodMiddleware } from '../../src/middlewares/method-middleware';
 import { passwordCompare } from '../../src/password';
 import {
   decodeToken,
@@ -19,21 +20,6 @@ import {
 } from '../../src/tokens';
 
 const loginHandler: MultiHandler = async (req: VercelRequest, res: VercelResponse) => {
-  if (req.method !== "POST" && req.method !== "OPTIONS") {
-    res.status(StatusCodes.NOT_FOUND).end("Method not allowed");
-    return {
-      action: "send",
-      response: res
-    }
-  }
-
-  if(req.method === "OPTIONS"){
-    res.status(StatusCodes.NO_CONTENT).end();
-    return {
-      action: "send",
-      response: res
-    }
-  }
 
   const t = await fetchGQL(
     JSON.stringify({
@@ -94,6 +80,7 @@ const loginHandler: MultiHandler = async (req: VercelRequest, res: VercelRespons
 }
 
 export default withMultiHandlers([
+  methodMiddleware(["POST"]),
   corsMiddleware,
   loginHandler
 ])

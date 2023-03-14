@@ -1,21 +1,16 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import { StatusCodes } from 'http-status-codes';
 
-import { StatusCodes } from "http-status-codes";
+import {
+  VercelRequest,
+  VercelResponse,
+} from '@vercel/node';
 
-import { fetchCM } from "../../../src/contentful";
-import { passwordHash } from "../../../src/password";
+import { fetchCM } from '../../../src/contentful';
+import { withMultiHandlers } from '../../../src/handlers';
+import { methodMiddleware } from '../../../src/middlewares/method-middleware';
+import { passwordHash } from '../../../src/password';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-    if (req.method !== "POST" && req.method !== "OPTIONS") {
-    return res
-		.status(StatusCodes.NOT_FOUND)
-		.setHeader("Allow", "POST")
-		.end("Not allowed");
-  }
-
-  if (req.method === "OPTIONS") {
-    return res.status(StatusCodes.NO_CONTENT).setHeader("Allow", "POST").end();
-  }
+async function registerUserHandler(req: VercelRequest, res: VercelResponse) {
 
      const user = await (
         await fetchCM("entries", {
@@ -64,3 +59,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(StatusCodes.OK).json(user);
 }
+
+
+export default withMultiHandlers([
+    methodMiddleware(["POST"]),
+    registerUserHandler
+])

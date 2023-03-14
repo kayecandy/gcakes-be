@@ -1,9 +1,12 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import {
+  VercelRequest,
+  VercelResponse,
+} from '@vercel/node';
 
 export type MultiHandlerResponse = {
   action: "next" | "send";
   response: VercelResponse;
-};
+} | VercelResponse;
 
 export type MultiHandler = (
   req: VercelRequest,
@@ -14,8 +17,10 @@ export const withMultiHandlers = (handlers: MultiHandler[]) => {
   const mainHandler = async (req: VercelRequest, res: VercelResponse) => {
     for (const handler of handlers) {
       const handlerRes = await handler(req, res);
-      if (handlerRes.action === "send") {
+      if("action" in handlerRes && handlerRes.action === "send"){
         return handlerRes.response;
+      }else if(!("action" in handlerRes)){
+        return handlerRes;
       }
     }
 

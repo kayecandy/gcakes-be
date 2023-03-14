@@ -12,17 +12,12 @@ import {
 } from '../../../src/handlers';
 import { authMiddleware } from '../../../src/middlewares/auth-middleware';
 import { corsMiddleware } from '../../../src/middlewares/cors-middleware';
+import { methodMiddleware } from '../../../src/middlewares/method-middleware';
 
 export const userDetailsHandler: MultiHandler = async (
   req: VercelRequest,
   res: VercelResponse
 ) => {
-  if (req.method !== "GET") {
-    return {
-      action: "send",
-      response: res.status(StatusCodes.NOT_FOUND).end("Method not allowed"),
-    };
-  }
 
   const t = await fetchGQL(
     JSON.stringify({
@@ -58,6 +53,7 @@ export const userDetailsHandler: MultiHandler = async (
 
 export default withMultiHandlers([
   corsMiddleware,
+  methodMiddleware(["GET"]),
   authMiddleware,
   userDetailsHandler,
 ]);
