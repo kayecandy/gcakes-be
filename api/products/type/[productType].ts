@@ -5,7 +5,7 @@ import {
   VercelResponse,
 } from '@vercel/node';
 
-import { fetchGQL } from '../../src/contentful';
+import { fetchGQL } from '../../../src/contentful';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
         const t = await (
