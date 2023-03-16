@@ -29,6 +29,9 @@ const addReviewHandler: MultiHandler = async (
           rating: {
             "en-US": req.body.rating,
           },
+          title: {
+            "en-US": req.body.title
+          },
           comment: {
             "en-US": req.body.comment,
           },
