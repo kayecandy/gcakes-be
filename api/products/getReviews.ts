@@ -16,10 +16,23 @@ export default async function reviewsHandler(req: VercelRequest, res: VercelResp
                             product {
                                 name
                                 price
+                                description
+                                image {
+                                    description
+                                    size
+                                    height
+                                    width
+                                }
+                                featured
                             }
                             user {
                                 userid
+                                firstName
+                                lastName
+                                birthday
                                 email
+                                address
+                                admin
                             }
                         }
                     }
