@@ -6,6 +6,11 @@ import {
 import { unauthorisedHandler } from '../errors/unauthorized';
 import { MultiHandler } from '../handlers';
 import { decodeToken } from '../tokens';
+import { User } from '../types/user';
+
+export type AuthMiddlewareData = {
+  decodedToken?: User;
+}
 
 /**
  * Middleware for authenticate user.
@@ -23,7 +28,10 @@ export const authMiddleware: MultiHandler = async (
     try {
       const decodedToken = await decodeToken(token);
 
-      if (decodedToken.payload.userid === req.query.userId) {
+      if (req.query.userId && decodedToken.payload.userid !== req.query.userId) {
+        throw new Error("Token `userid` doesn't match with parameter `userId`");
+        
+      } else {
         return {
           action: "next",
           response: res,
@@ -31,8 +39,6 @@ export const authMiddleware: MultiHandler = async (
             decodedToken: decodedToken.payload
           }
         };
-      } else {
-        throw new Error("Token `userid` doesn't match with parameter `userId`");
       }
     } catch (err) {
       console.log(err);
