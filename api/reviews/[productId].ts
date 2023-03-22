@@ -2,13 +2,13 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import { fetchGQL } from '../../src/contentful';
 import { StatusCodes } from "http-status-codes";
 
-// Currently Only For Testing
+// Gets reviews of a product using a productId associated
 export default async function reviewsHandler(req: VercelRequest, res: VercelResponse) {
     const t = await fetchGQL(
         JSON.stringify({
             query: `
-                query {
-                    reviewsCollection {
+                query ($productId: String) {
+                    reviewsCollection(where: { product: { sys: { id: $productId }}}) {
                         items {
                             sys {
                                 id
@@ -41,6 +41,9 @@ export default async function reviewsHandler(req: VercelRequest, res: VercelResp
                     }
                 }
             `,
+            variables: {
+                productId: req.query.productId,
+            },
         })
     );
 
