@@ -10,6 +10,9 @@ export default async function reviewsHandler(req: VercelRequest, res: VercelResp
                 query {
                     reviewsCollection {
                         items {
+                            sys {
+                                id
+                            }
                             title
                             rating
                             comment
