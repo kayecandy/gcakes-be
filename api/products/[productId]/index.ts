@@ -6,7 +6,7 @@ import {
 } from '@vercel/node';
 
 import { fetchGQL } from '../../../src/contentful';
-
+// Gets a Product using a productId (sys.id)
 export default async function handler(req: VercelRequest, res: VercelResponse) {
         const t = await (
           await fetchGQL(

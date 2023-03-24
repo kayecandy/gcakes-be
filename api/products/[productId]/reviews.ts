@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import { fetchGQL } from '../../src/contentful';
+import { fetchGQL } from '../../../src/contentful';
 import { StatusCodes } from "http-status-codes";
 
 // Gets reviews of a product using a productId associated
