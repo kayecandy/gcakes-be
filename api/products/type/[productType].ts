@@ -41,7 +41,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             })
           )
         ).json()
-        console.log(t.data.productCollection.items)
-        return res.status(StatusCodes.OK).json(t.data.productCollection.items);
+        const s = t.data.productCollection.items.map((item: any) => {
+          const { contentfulMetadata, ...itemProperies } = item
+          return {
+            ...itemProperies,
+            tags: contentfulMetadata.tags
+          }})
+        return res.status(StatusCodes.OK).json(s);
   }
   
