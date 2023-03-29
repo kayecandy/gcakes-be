@@ -18,6 +18,11 @@ export default async function getOrdersHandler(req: VercelRequest, res: VercelRe
                                 email
                                 address
                             }
+                            product {
+                                sys {
+                                    id
+                                }
+                            }
                             productsCollection {
                                 items {
                                     sys {

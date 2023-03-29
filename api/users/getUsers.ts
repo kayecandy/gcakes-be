@@ -11,6 +11,9 @@ export default async function usersHandler(req: VercelRequest, res: VercelRespon
                     query {
                         userCollection {
                             items {
+                                sys{
+                                    id
+                                }
                                 userid
                                 password
                                 firstName

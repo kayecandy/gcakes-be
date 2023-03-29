@@ -21,27 +21,54 @@ async function addOrderHandler(req: VercelRequest, res: VercelResponse) {
                         "en-US": req.body.date,
                     },
                     customer: {
-                        "en-US": req.body.customer,
+                        "en-US": {
+                            sys: {
+                                linkType: "Entry",
+                                id: req.body.userId,
+                            },
+                        },
                     },
-                    products: {
-                        "en-US": req.body.products,
+                    product: {
+                        "en-US": {
+                            sys: {
+                                linkType: "Entry",
+                                id: req.body.productId
+                            },
+                        },
                     },
+                    // productsCollection: {
+                    //     "en-US": {
+                    //         type: "Array",
+                    //         items: {
+                    //             sys: {
+                    //                 id: req.body.productIds,
+                    //                 linkType: "Entry",
+                    //             },
+                    //         },
+                    //     },
+                    // },
                     quantity: {
                         "en-US": req.body.quantity,
                     },
                     deliveryAddress: {
                         "en-US": req.body.deliveryAddress,
                     },
-                    paymentMethod: {
-                        "en-US": req.body.paymentMethod,
-                    },
+                    // paymentMethod: {
+                    //     "en-US": req.body.paymentMethod,
+                    // },
                 },
             }),
         })
-    ).json();
+    );
+
+    if (!order.ok) {
+        throw order;
+    }
+    
+    const orderJson = await order.json();
 
     if (req.body.published) {
-        await fetchCM(`entries/${order.sys.id}/published`, {
+        await fetchCM(`entries/${orderJson.sys.id}/published`, {
             method: "PUT",
             headers: {
                 "X-Contentful-Version": "1",
