@@ -41,7 +41,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             })
           )
         ).json()
-    
+        console.log(t.data.productCollection.items)
         return res.status(StatusCodes.OK).json(t.data.productCollection.items);
   }
   
