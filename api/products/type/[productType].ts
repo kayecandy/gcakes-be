@@ -25,6 +25,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         url
                       }
                       productType
+                      contentfulMetadata{
+                        tags{
+                            id,
+                            name
+                        }
+                      }
                     }
                   }
                 }
