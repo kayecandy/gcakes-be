@@ -35,11 +35,11 @@ async function registerUserHandler(req: VercelRequest, res: VercelResponse) {
                     email: {
                         "en-US": req.body.email,
                     },
-                    address: {
-                        "en-US": req.body.address,
-                    },
                     birthday: {
                         "en-US": req.body.birthday,
+                    },
+                    address: {
+                        "en-US": req.body.address,
                     },
                     admin: {
                         "en-US": req.body.admin,
