@@ -39,7 +39,7 @@ const addReviewHandler: MultiHandler = async (
             "en-US": {
               sys: {
                 linkType: "Entry",
-                id: req.body.productId,
+                id: req.query.productId,
               },
             },
           },
