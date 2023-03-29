@@ -6,10 +6,10 @@ import {
 import { unauthorisedHandler } from '../errors/unauthorized';
 import { MultiHandler } from '../handlers';
 import { decodeToken } from '../tokens';
-import { User } from '../types/user';
+import { AccessToken } from '../types/auth';
 
 export type AuthMiddlewareData = {
-  decodedToken?: User;
+  decodedToken?: AccessToken;
 }
 
 /**

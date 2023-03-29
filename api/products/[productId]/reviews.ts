@@ -1,6 +1,11 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import { StatusCodes } from 'http-status-codes';
+
+import {
+  VercelRequest,
+  VercelResponse,
+} from '@vercel/node';
+
 import { fetchGQL } from '../../../src/contentful';
-import { StatusCodes } from "http-status-codes";
 
 // Gets reviews of a product using a productId associated
 export default async function reviewsHandler(req: VercelRequest, res: VercelResponse) {
@@ -16,18 +21,6 @@ export default async function reviewsHandler(req: VercelRequest, res: VercelResp
                             title
                             rating
                             comment
-                            product {
-                                name
-                                price
-                                description
-                                image {
-                                    description
-                                    size
-                                    height
-                                    width
-                                }
-                                featured
-                            }
                             user {
                                 userid
                                 firstName

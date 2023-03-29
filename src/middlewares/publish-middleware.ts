@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import { Response } from 'node-fetch';
 
 import { fetchCM } from '../contentful';
 import { MultiHandler } from '../handlers';
@@ -6,12 +7,12 @@ import { MultiHandler } from '../handlers';
 export type PublishMiddlewareData = {
   entryId?: string;
   version?: string;
+  publishResFormatter?: (publishRes: Response) => Promise<any>;
 };
-
 
 /**
  * Publishes a Contentful CMS entry.
- * 
+ *
  * Needs AuthMiddleware to handle errors
  */
 export const publishMiddleware: MultiHandler = async (
@@ -19,25 +20,27 @@ export const publishMiddleware: MultiHandler = async (
   res,
   data: PublishMiddlewareData = {}
 ) => {
-  const { entryId, version = "1" } = data;
+  const { entryId, version = "1", publishResFormatter } = data;
 
   try {
-
     const publishRes = await fetchCM(`entries/${entryId}/published`, {
       method: "PUT",
       headers: {
-        "X-Contentful-Version": version
-      }
+        "X-Contentful-Version": version,
+      },
     });
 
-    if(!publishRes.ok){
+    if (!publishRes.ok) {
       throw publishRes;
     }
 
-    return res.status(StatusCodes.OK).json(
-      await publishRes.json()
-    )
-
+    return res
+      .status(StatusCodes.OK)
+      .json(
+        publishResFormatter
+          ? await publishResFormatter(publishRes)
+          : await publishRes.json()
+      );
   } catch (e) {
     return {
       action: "next",
@@ -48,5 +51,4 @@ export const publishMiddleware: MultiHandler = async (
       },
     };
   }
-
 };
