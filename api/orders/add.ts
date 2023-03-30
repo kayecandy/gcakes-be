@@ -13,6 +13,7 @@ const addOrderHandler: MultiHandler = async(
     data: AuthMiddlewareData = {}
     ) => {
     try {
+        console.log('test ',req.body.productId);
         const order = await (
             await fetchCM("entries", {
                 method: "POST",
@@ -35,13 +36,22 @@ const addOrderHandler: MultiHandler = async(
                                 },
                             },
                         },
+                        // products: {
+                        //     "en-US": [{
+                        //         sys: {
+                        //             id: req.body.productId,
+                        //             linkType: "Entry",
+                        //         },
+                        //     }],
+                        // },
                         products: {
-                            "en-US": [{
-                                sys: {
-                                    id: req.body.productId,
-                                    linkType: "Entry",
-                                },
-                            }],
+                            "en-US": req.body.productId.map((id : string) => ({
+                                    sys: {
+                                        id,
+                                        linkType: "Entry"
+                                    }
+                                })
+                            ),
                         },
                         quantity: {
                             "en-US": req.body.quantity,
