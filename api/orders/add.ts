@@ -36,14 +36,6 @@ const addOrderHandler: MultiHandler = async(
                                 },
                             },
                         },
-                        // products: {
-                        //     "en-US": [{
-                        //         sys: {
-                        //             id: req.body.productId,
-                        //             linkType: "Entry",
-                        //         },
-                        //     }],
-                        // },
                         products: {
                             "en-US": req.body.productId.map((id : string) => ({
                                     sys: {
