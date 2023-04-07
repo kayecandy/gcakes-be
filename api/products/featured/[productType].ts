@@ -22,6 +22,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               }
               featured
               productType
+              contentfulMetadata{
+                tags{
+                    id,
+                    name
+                }
+              }
             }
           }
         }
@@ -34,5 +40,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const response = await t.json();
 
-  return res.status(StatusCodes.OK).json(response.data.productCollection.items);
+  const s = response.data.productCollection.items.map((item: any) => {
+    const { contentfulMetadata, ...itemProperies } = item
+    return {
+      ...itemProperies,
+      tags: contentfulMetadata.tags
+    }})
+
+  return res.status(StatusCodes.OK).json(s);
 }
