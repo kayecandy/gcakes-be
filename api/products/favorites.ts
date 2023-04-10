@@ -19,10 +19,21 @@ const getFavoritesHandler: MultiHandler = async (req, res, data: AuthMiddlewareD
       throw new Error("No token passed in review handler")
     }
 
-    const favorites = await getFavoriteEntry(decodedToken.sys.id, undefined, true);
+    const favorites: Array<Record<string, any>> = await getFavoriteEntry(decodedToken.sys.id, undefined, true);
 
 
-    return res.status(StatusCodes.OK).json(favorites)
+    return res.status(StatusCodes.OK).json(favorites.map(favorite=>{
+      const {product, ...favoriteProps} = favorite;
+      const {contentfulMetadata, ...props} = favorite.product;
+
+      return {
+        ...favoriteProps,
+        product: {
+          ...props,
+          tags: contentfulMetadata.tags
+        }
+      }
+    }))
     
   }catch(e){
     return {
