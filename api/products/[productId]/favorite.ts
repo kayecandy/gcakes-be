@@ -17,7 +17,7 @@ import { errorMiddleware } from '../../../src/middlewares/error-middleware';
 import { methodMiddleware } from '../../../src/middlewares/method-middleware';
 import { publishMiddleware } from '../../../src/middlewares/publish-middleware';
 
-export const getFavoriteEntry = async (userId: string, productId: string) => {
+export const getFavoriteEntry = async (userId: string, productId?: string, hasProductDetails?: boolean) => {
   const t = await fetchGQL(
     JSON.stringify({
         query: `
@@ -36,6 +36,21 @@ export const getFavoriteEntry = async (userId: string, productId: string) => {
                         sys{
                             id
                         }
+                        ${hasProductDetails ? `
+                        ,name,
+                        price,
+                        description,
+                        image{
+                            url
+                        },
+                        productType,
+                        contentfulMetadata{
+                            tags{
+                                id,
+                                name
+                            }
+                        }
+                        ` : ''}
                     }
                 }
         
