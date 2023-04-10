@@ -8,6 +8,7 @@ import {
   authMiddleware,
   AuthMiddlewareData,
 } from '../../src/middlewares/auth-middleware';
+import { corsMiddleware } from '../../src/middlewares/cors-middleware';
 import { errorMiddleware } from '../../src/middlewares/error-middleware';
 import { getFavoriteEntry } from './[productId]/favorite';
 
@@ -48,6 +49,7 @@ const getFavoritesHandler: MultiHandler = async (req, res, data: AuthMiddlewareD
 }
 
 export default withMultiHandlers([
+  corsMiddleware,
   authMiddleware,
   getFavoritesHandler,
   errorMiddleware
