@@ -17,6 +17,43 @@ import { errorMiddleware } from '../../../src/middlewares/error-middleware';
 import { methodMiddleware } from '../../../src/middlewares/method-middleware';
 import { publishMiddleware } from '../../../src/middlewares/publish-middleware';
 
+export const getFavoriteEntry = async (userId: string, productId: string) => {
+  const t = await fetchGQL(
+    JSON.stringify({
+        query: `
+          query($userId: String, $productId: String){
+            favoritesCollection(where: {user: {sys: {id: $userId}}, product:{sys: {id: $productId}}}){
+                items{
+                    sys{
+                        id
+                    },
+                    user{
+                        sys{
+                            id
+                        }
+                    },
+                    product{
+                        sys{
+                            id
+                        }
+                    }
+                }
+        
+            }
+          }
+        `,
+        variables: {
+            productId,
+            userId
+        },
+    })
+  );
+
+  return (await t.json()).data.favoritesCollection.items;
+
+
+}
+
 export const favoriteHandler: MultiHandler =async (req, res, data: AuthMiddlewareData = {}) => {
 
   const { decodedToken } = data;
@@ -30,38 +67,7 @@ export const favoriteHandler: MultiHandler =async (req, res, data: AuthMiddlewar
     /**
      * Check for duplicates
      */
-    const t = await fetchGQL(
-      JSON.stringify({
-          query: `
-            query($userId: String, $productId: String){
-              favoritesCollection(where: {user: {sys: {id: $userId}}, product:{sys: {id: $productId}}}){
-                  items{
-                      sys{
-                          id
-                      },
-                      user{
-                          sys{
-                              id
-                          }
-                      },
-                      product{
-                          sys{
-                              id
-                          }
-                      }
-                  }
-          
-              }
-            }
-          `,
-          variables: {
-              productId: req.query.productId,
-              userId: decodedToken.sys.id
-          },
-      })
-    );
-
-    const duplicateItems = (await t.json()).data.favoritesCollection.items;
+    const duplicateItems = await getFavoriteEntry(decodedToken.sys.id, req.query.productId as string);
 
     const hasDuplicate = duplicateItems.length > 0;
 
