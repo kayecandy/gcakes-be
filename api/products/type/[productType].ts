@@ -1,17 +1,14 @@
-import { StatusCodes } from 'http-status-codes';
+import { StatusCodes } from "http-status-codes";
 
-import {
-  VercelRequest,
-  VercelResponse,
-} from '@vercel/node';
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
-import { fetchGQL } from '../../../src/contentful';
+import { fetchGQL } from "../../../src/contentful";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-        const t = await (
-          await fetchGQL(
-            JSON.stringify({
-              query: `
+  const t = await (
+    await fetchGQL(
+      JSON.stringify({
+        query: `
                 query ($productType: String) {
                   productCollection(where: { productType: $productType }) {
                     items {
@@ -25,17 +22,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         url
                       }
                       productType
+                      contentfulMetadata{
+                        tags{
+                            id,
+                            name
+                        }
+                      }
                     }
                   }
                 }
               `,
-              variables: {
-                productType: req.query.productType,
-              },
-            })
-          )
-        ).json()
-    
-        return res.status(StatusCodes.OK).json(t.data.productCollection.items);
-  }
-  
+        variables: {
+          productType: req.query.productType,
+        },
+      })
+    )
+  ).json();
+  const s = t.data.productCollection.items.map((item: any) => {
+    const { contentfulMetadata, ...itemProperies } = item;
+    return {
+      ...itemProperies,
+      tags: contentfulMetadata.tags,
+    };
+  });
+  return res.status(StatusCodes.OK).json(s);
+}
