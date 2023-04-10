@@ -3,6 +3,7 @@ import { Response } from 'node-fetch';
 
 import { fetchCM } from '../contentful';
 import { MultiHandler } from '../handlers';
+import { ErrorMiddlewareData } from './error-middleware';
 
 export type PublishMiddlewareData = {
   entryId?: string;
@@ -18,11 +19,15 @@ export type PublishMiddlewareData = {
 export const publishMiddleware: MultiHandler = async (
   req,
   res,
-  data: PublishMiddlewareData = {}
+  data: PublishMiddlewareData & ErrorMiddlewareData = {}
 ) => {
   const { entryId, version = "1", publishResFormatter } = data;
 
   try {
+    if(data.error){
+      throw data.error;
+    }
+
     const publishRes = await fetchCM(`entries/${entryId}/published`, {
       method: "PUT",
       headers: {
